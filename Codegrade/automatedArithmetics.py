@@ -40,4 +40,7 @@ def arithmetic_operation(arithmetic_type):
         else:
             incorrect += 1
     print("You got", correct, "correct and", incorrect, "incorrect answers in", arithmetic_type)
-arithmetic_operation(arithmetic_type)
+
+
+if __name__ == "__main__": # Only runs the function if the file is accessed directly.
+    arithmetic_operation(arithmetic_type)
