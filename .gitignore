@@ -1,3 +1,4 @@
 *.docx
 *.pdf
 students.csv
+__pycache__/
