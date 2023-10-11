@@ -1,2 +1,2 @@
 # Please stay the heck out of here if you somehow manage to find it
-This is just a lazy way to sync my progress on two devices.
+I use this for my own file syncing. Contains all Codegrade assignments for RUAS Informatica.
