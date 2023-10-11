@@ -4,7 +4,7 @@ foundEntries = []
 
 def addBook():
     bookDetails = input("Book details: ")
-    bookDetailsList = bookDetails.split(sep=", ")
+    bookDetailsList = bookDetails.split(sep=",")
     bookDetailsDict = {'title': bookDetailsList[0], 'author': bookDetailsList[1],
                        'publisher': bookDetailsList[2], 'pub_date': bookDetailsList[3]}
     if len(bookDetailsList) == 4:
@@ -44,14 +44,17 @@ def mainMenu():
         print("[A] Add book")
         print("[S] Search book")
         print("[E] Exit (and print)")
-        menuChoice = input()
+        menuChoice = input("What would you like to do? ")
         if menuChoice == "A":
             addBook()
         elif menuChoice == "S":
             term = input("Search term: ")
             search_book(books, term)
         elif menuChoice == "E":
-            print(*foundEntries, sep="\n")
+            if len(foundEntries) != 0:
+                print(*foundEntries, sep="\n")
+            else:
+                print(*books, sep="\n")
             running = False
         else:
             print("That's not a valid entry!")
