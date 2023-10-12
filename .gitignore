@@ -1,4 +1,5 @@
 *.docx
 *.pdf
 students.csv
+contacts.json
 __pycache__/
