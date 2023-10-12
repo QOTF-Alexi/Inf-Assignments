@@ -12,11 +12,15 @@ temperatures = (
 
 
 def findEqual9510():
-    print()
+    temps_float_95 = [float(temp) for temp in (temperatures[0])[2]]
+    temps_float_10 = [float(temp) for temp in (temperatures[1])[2]]
+    print(len(set(temps_float_95).intersection(set(temps_float_10))))
 
 
 def findEqual9520():
-    print()
+    temps_float_95 = [float(temp) for temp in (temperatures[0])[2]]
+    temps_float_20 = [float(temp) for temp in (temperatures[2])[2]]
+    print(len(set(temps_float_95).intersection(set(temps_float_20))))
 
 
 def findHighestTemp():
@@ -27,8 +31,7 @@ def findHighestTemp():
         year += 1
         maxTemp = max(maxTemps)
         warmestDay = maxTemps.index(maxTemp)
-    print("The warmest day in March was in ", (temperatures[warmestDay])[0], ".",
-          " The maximum average temperature was ", maxTemp, "c", sep="")
+    print((temperatures[warmestDay])[0])
 
 
 def findWarmestMarch():
@@ -42,8 +45,7 @@ def findWarmestMarch():
         averageTemps.append(round((sumTemps / (len((temperatures[0])[2]))), 2))
         maxAvg = max(averageTemps)
         warmestMarch = averageTemps.index(maxAvg)
-    print("The warmest March was in ", (temperatures[warmestMarch])[0], ".",
-          " The average temperature in that month was ", maxAvg, "c", sep="")
+    print(temperatures[warmestMarch])
 
 
 if __name__ == "__main__":
