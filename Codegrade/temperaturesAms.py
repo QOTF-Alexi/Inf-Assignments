@@ -2,6 +2,22 @@ import os
 import sys
 
 
+monthToName = {
+    "1": "January",
+    "2": "February",
+    "3": "March",
+    "4": "April",
+    "5": "May",
+    "6": "June",
+    "7": "July",
+    "8": "August",
+    "9": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December"
+}
+
+
 def load_txt_file(file_name):
     file_content = []
 
@@ -44,6 +60,8 @@ def warmestMonthOfYear(year, file):
     for element in file:
         if str(year) in element[2]:
             yearList.append(element)
+    month = str(monthToName[max(element[1] for element in yearList)])
+    print(month)
 
 
 def coldestMonthOfYear(year, file):
@@ -51,6 +69,8 @@ def coldestMonthOfYear(year, file):
     for element in file:
         if str(year) in element[2]:
             yearList.append(element)
+    month = str(monthToName[min(element[1] for element in yearList)])
+    print(month)
 
 
 def listAvgTemp_perMonth_everyYear(file):
@@ -64,8 +84,8 @@ def main(filename):
         print("[1] Average temperatures per year (fahrenheit)")
         print("[2] Average temperatures per year (celsius)")    # Hint: Use built-in map() function.
         print("[3] Warmest and coldest year")   # as tuple based on the average temperature
-        print("[4] Warmest month of a year")    # based on the input year of the user (full month name)
-        print("[5] Coldest month of a year")    # based on the input year of the user (full month name)
+        print("[4] Warmest month of a given year")
+        print("[5] Coldest month of a given year")
         print("[6] List of average temperature per every month of each year")
         print("[Q] Quit the program")
         menuChoice = str(input("What would you like to do? "))
