@@ -65,11 +65,15 @@ def add_contact(addressbook):
     print("Contact added to addressbook")
 
 
-def remove_contact(addressbook):
+def askToRemove():
     try:
         ident = int(input("Enter the ID number: "))
     except ValueError:
         print("That is not a valid entry!")
+    return ident
+
+
+def remove_contact(addressbook, ident):
     for element in range(len(addressbook)):
         if (addressbook[element])["id"] == ident:
             del addressbook[element]
@@ -77,12 +81,20 @@ def remove_contact(addressbook):
     print("Contact removed successfully.")
 
 
-'''
-merge duplicates (automated > same fullname [firstname & lastname])
-'''
-def merge_contacts():
-    # todo: implement this function
-    ...
+def merge_contacts(addressbook):
+    for element in range(len(addressbook)):
+        fullname = (addressbook[element])["first_name"], (addressbook[element])["last_name"]
+        ident = (addressbook[element])["id"]
+        for compareElement in range(len(addressbook)):
+            fullnameComp = (addressbook[compareElement])["first_name"], (addressbook[compareElement])["last_name"]
+            identComp = (addressbook[compareElement])["id"]
+            if fullname == fullnameComp and ident != identComp:
+                merge_emails = (addressbook[compareElement])["emails"]
+                merge_phones = (addressbook[compareElement])["phone_numbers"]
+                ((addressbook[element])["emails"]) += merge_emails
+                ((addressbook[element])["phone_numbers"]) += merge_phones
+                remove_contact(addressbook, identComp)
+                return None
 
 
 def read_from_json(filename) -> list:
@@ -120,7 +132,8 @@ def main(json_file):
             add_contact(addressbook)
             write_to_json(json_file, addressbook)
         elif menuChoice == "R":
-            remove_contact(addressbook)
+            ident = askToRemove()
+            remove_contact(addressbook, ident)
             write_to_json(json_file, addressbook)
         elif menuChoice == "M":
             merge_contacts(addressbook)
