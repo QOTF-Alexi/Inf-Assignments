@@ -13,30 +13,37 @@ def display(addressbook: list):
         print("Position:", (addressbook[element])["id"])
         print("First name:", (addressbook[element])["first_name"])
         print("Last name:", (addressbook[element])["last_name"])
-        email_1 = ((addressbook[element])["emails"])[0]
-        if len((addressbook[element])["emails"]) == 2:
-            email_2 = ((addressbook[element])["emails"])[1]
-            print("Emails: ", email_1, ", ", email_2, sep="")
-        else:
-            print("Emails: ", email_1, sep="")
-
-        phone_1 = ((addressbook[element])["phone_numbers"])[0]
-        if len((addressbook[element])["phone_numbers"]) == 2:
-            phone_2 = ((addressbook[element])["phone_numbers"])[1]
-            print("Phone numbers: ", phone_1, ", ", phone_2, sep="")
-        else:
-            print("Phone numbers: ", phone_1, sep="")
+        print("Emails: ", end="")
+        print(*(addressbook[element])["emails"], sep=", ")
+        print("Phone numbers: ", end="")
+        print(*(addressbook[element])["phone_numbers"], sep=", ")
     lines(38)
 
 
-'''
-return list of contacts sorted by first_name or last_name [if blank then unsorted], direction [ASC (default)/DESC])
-'''
 def list_contacts(addressbook):
-    # todo: implement this function
-    ...
-
-    return addressbook
+    sortedAddressBook = []
+    sortingName = input("Sort by firstname or lastname (empty for none)? ")
+    if sortingName == "":
+        display(addressbook)
+    elif sortingName == "firstname" or sortingName == "lastname":
+        sortingOrder = input("Sort ASC or DESC? ")
+        if sortingOrder == "ASC" or sortingOrder == "":
+            if sortingName == "firstname":
+                sortedAddressBook = sorted(addressbook, key=lambda d: d['first_name'])
+            else:
+                sortedAddressBook = sorted(addressbook, key=lambda d: d['last_name'])
+            display(sortedAddressBook)
+        elif sortingOrder == "DESC":
+            if sortingName == "firstname":
+                sortedAddressBook = sorted(addressbook, key=lambda d: d['first_name'], reverse=True)
+            else:
+                sortedAddressBook = sorted(addressbook, key=lambda d: d['last_name'], reverse=True)
+            display(sortedAddressBook)
+        else:
+            print("That is not a valid entry!")
+    else:
+        print("That is not a valid entry!")
+    return sortedAddressBook
 
 
 def add_contact(addressbook):
@@ -44,7 +51,10 @@ def add_contact(addressbook):
     lastName = input("Lastname: ")
     emails = [input("Emails: ")]
     phones = [input("Phonenumbers: ")]
-    ident = (addressbook[-1])["id"] + 1
+    if len(addressbook) == 0:
+        ident = 1
+    else:
+        ident = (addressbook[-1])["id"] + 1
 
     addressbook.append({"id": ident,
                         "first_name": firstName,
@@ -55,12 +65,16 @@ def add_contact(addressbook):
     print("Contact added to addressbook")
 
 
-'''
-remove contact by ID (integer)
-'''
 def remove_contact(addressbook):
-    # todo: implement this function
-    ...
+    try:
+        ident = int(input("Enter the ID number: "))
+    except ValueError:
+        print("That is not a valid entry!")
+    for element in range(len(addressbook)):
+        if (addressbook[element])["id"] == ident:
+            del addressbook[element]
+            break
+    print("Contact removed successfully.")
 
 
 '''
@@ -101,7 +115,7 @@ def main(json_file):
         print("[Q] Quit program")
         menuChoice = input("What would you like to do? ")
         if menuChoice == "L":
-            list_contacts(addressbook)
+            display(addressbook)
         elif menuChoice == "A":
             add_contact(addressbook)
             write_to_json(json_file, addressbook)
