@@ -2,4 +2,5 @@
 *.pdf
 students.csv
 contacts.json
+NLAMSTDM.txt
 __pycache__/
