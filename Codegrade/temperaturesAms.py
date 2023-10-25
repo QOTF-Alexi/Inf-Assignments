@@ -18,6 +18,7 @@ monthToName = {
 }
 
 
+# Loads a text file into memory
 def load_txt_file(file_name):
     file_content = []
 
@@ -28,26 +29,55 @@ def load_txt_file(file_name):
     return file_content
 
 
+# Determine earliest and latest year of file, assuming it is sorted
+def determine_years(file):
+    yearMin = file[0][2]
+    yearMax = file[-1][2]
+    return yearMin, yearMax
+
+
+# Determine latest month of file, assuming it is sorted and only the last is incomplete
+def determine_lastmonth(file):
+    maxMonth = file[-1][0]
+    return maxMonth
+
+
+# Converts floats from Fahrenheit to Celsius
 def fahrenheit_to_celsius(fahrenheit: float):
     celsius = (fahrenheit - 32) * 1.8
     return celsius
+
+
+# Calculates the average temperature for a given month of a given year
+def average_temp_per_month(month, year, temperatures: dict):
+    monthList = []
+    addedTemps = 0
+    divider = 0
+    for element in temperatures:
+        if str(year) in element[2] and str(month) in element[0]:
+            monthList.append(element)
+            divider += 1
+    for temperature in range(len(monthList)):
+        addedTemps += float((monthList[temperature])[3])
+    averageTempMonth = addedTemps / divider
+    return averageTempMonth
 
 
 # Returns average annual temperature in Fahrenheit
 def average_temp_per_year(temperatures: dict):
     yearList = []
     averageTempList = []
-    for year in range(1995, 2021):
+    yearMin = int(determine_years(temperatures)[0])
+    yearMax = int(determine_years(temperatures)[1])
+    for year in range(yearMin, yearMax + 1):
         addedTemps = 0
         for element in temperatures:
             if str(year) in element[2]:
                 yearList.append(element)
-        # Calculate average here
         for temperature in range(len(yearList)):
             addedTemps += float((yearList[temperature])[3])
-        averageTemp = round(addedTemps / len(yearList), 1)
-        averageTempList.append(tuple((str(year), averageTemp)))
-    print(averageTempList)
+        averageTemp = round(addedTemps / len(yearList), 2)
+        averageTempList.append((year, averageTemp))
     return averageTempList
 
 
@@ -55,6 +85,7 @@ def warmest_coldest_year(annualTemps):
     ()
 
 
+# Fetches the warmest month of an entered year
 def warmestMonthOfYear(year, file):
     yearList = []
     for element in file:
@@ -64,6 +95,7 @@ def warmestMonthOfYear(year, file):
     print(month)
 
 
+# Fetches the coldest month of an entered year
 def coldestMonthOfYear(year, file):
     yearList = []
     for element in file:
@@ -73,8 +105,19 @@ def coldestMonthOfYear(year, file):
     print(month)
 
 
-def listAvgTemp_perMonth_everyYear(file):
-    ()
+# Lists the average temperature of every month of every year
+def listAvgTemp_perMonth_everyYear(file, yearMin, yearMax, lastMonth):
+    list_year_month_avgtemp = []
+    for year in range(yearMin, yearMax + 1):
+        if year == yearMax:
+            for month in range(1, lastMonth + 1):  # HIER DUS
+                avgMonthTemp = average_temp_per_month(month, year, file)
+                list_year_month_avgtemp.append((year, {month: round(avgMonthTemp, 1)}))
+        else:
+            for month in range(1, 13):  # HIER DUS
+                avgMonthTemp = average_temp_per_month(month, year, file)
+                list_year_month_avgtemp.append((year, {month: round(avgMonthTemp, 1)}))
+    print(list_year_month_avgtemp)
 
 
 def main(filename):
@@ -90,7 +133,7 @@ def main(filename):
         print("[Q] Quit the program")
         menuChoice = str(input("What would you like to do? "))
         if menuChoice == "1":
-            average_temp_per_year(file)
+            print(average_temp_per_year(file))
         elif menuChoice == "2":
             ()
         elif menuChoice == "3":
@@ -103,10 +146,12 @@ def main(filename):
             year = input("Enter a year: ")
             coldestMonthOfYear(year, file)
         elif menuChoice == "6":
-            listAvgTemp_perMonth_everyYear(file)
+            listAvgTemp_perMonth_everyYear(file, 1995, 2020, 5)
             # Print a list of tuples where the first element of each tuple is the year and the second element of the
             # tuple is a dictionary with months as the keys and the average temprature (in Celsius)
             # of each month as the value
+        elif menuChoice == "7":
+            print(average_temp_per_month(1, 1996, file))
         elif menuChoice == "Q":
             running = False
         else:
