@@ -44,7 +44,7 @@ def determine_lastmonth(file):
 
 # Converts floats from Fahrenheit to Celsius
 def fahrenheit_to_celsius(fahrenheit: float):
-    celsius = (fahrenheit - 32) * 1.8
+    celsius = (fahrenheit - 32) * 5 / 9
     return celsius
 
 
@@ -64,21 +64,27 @@ def average_temp_per_month(month, year, temperatures: dict):
 
 
 # Returns average annual temperature in Fahrenheit
-def average_temp_per_year(temperatures: dict):
-    yearList = []
-    averageTempList = []
-    yearMin = int(determine_years(temperatures)[0])
-    yearMax = int(determine_years(temperatures)[1])
-    for year in range(yearMin, yearMax + 1):
-        addedTemps = 0
-        for element in temperatures:
-            if str(year) in element[2]:
-                yearList.append(element)
-        for temperature in range(len(yearList)):
-            addedTemps += float((yearList[temperature])[3])
-        averageTemp = round(addedTemps / len(yearList), 2)
-        averageTempList.append((year, averageTemp))
-    return averageTempList
+def average_temperature_per_year(data):
+    year_temperatures = {}
+    for row in data:
+        year = row[2]
+        temperature = float(row[3])
+        if year not in year_temperatures:
+            year_temperatures[year] = [temperature]
+        else:
+            year_temperatures[year].append(temperature)
+    result = [(year, round(sum(temperatures) / len(temperatures), 2))
+              for year, temperatures in year_temperatures.items()]
+    return result
+
+
+def average_temperature_per_year_celsius(data):
+    templistC = []
+    for element in data:
+        year = element[0]
+        tempC = fahrenheit_to_celsius(element[1])
+        templistC.append((year, round(tempC, 2)))
+    return templistC
 
 
 def warmest_coldest_year(annualTemps):
@@ -133,11 +139,12 @@ def main(filename):
         print("[Q] Quit the program")
         menuChoice = str(input("What would you like to do? "))
         if menuChoice == "1":
-            print(average_temp_per_year(file))
+            print(average_temperature_per_year(file))
         elif menuChoice == "2":
-            ()
+            tempsF = average_temperature_per_year(file)
+            print(average_temperature_per_year_celsius(tempsF))
         elif menuChoice == "3":
-            annualTemps = average_temp_per_year(file)
+            annualTemps = average_temperature_per_year(file)
             warmest_coldest_year(annualTemps)
         elif menuChoice == "4":
             year = input("Enter a year: ")
