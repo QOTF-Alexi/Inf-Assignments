@@ -30,21 +30,21 @@ def load_txt_file(file_name):
 
 
 # Determine earliest and latest year of file, assuming it is sorted
-def determine_years(file):
-    yearMin = file[0][2]
-    yearMax = file[-1][2]
+def determine_years(data):
+    yearMin = data[0][2]
+    yearMax = data[-1][2]
     return yearMin, yearMax
 
 
 # Determine latest month of file, assuming it is sorted and only the last is incomplete
-def determine_lastmonth(file):
-    maxMonth = file[-1][0]
+def determine_lastmonth(data):
+    maxMonth = data[-1][0]
     return maxMonth
 
 
 # Converts floats from Fahrenheit to Celsius
 def fahrenheit_to_celsius(fahrenheit: float):
-    celsius = (fahrenheit - 32) * 5 / 9
+    celsius = (float(fahrenheit) - 32) * 5 / 9
     return celsius
 
 
@@ -64,7 +64,7 @@ def average_temp_per_month(month, year, temperatures: dict):
 
 
 # Returns average annual temperature in Fahrenheit
-def average_temperature_per_year(data):
+def average_temp_per_year(data):
     year_temperatures = {}
     for row in data:
         year = row[2]
@@ -78,11 +78,12 @@ def average_temperature_per_year(data):
     return result
 
 
+# Returns average annual temperature in Celsius
 def average_temperature_per_year_celsius(data):
     templistC = []
     for element in data:
         year = element[0]
-        tempC = fahrenheit_to_celsius(element[1])
+        tempC = fahrenheit_to_celsius(float(element[1]))
         templistC.append((year, round(tempC, 2)))
     return templistC
 
@@ -92,9 +93,9 @@ def warmest_coldest_year(annualTemps):
 
 
 # Fetches the warmest month of an entered year
-def warmestMonthOfYear(year, file):
+def warmestMonthOfYear(year, data):
     yearList = []
-    for element in file:
+    for element in data:
         if str(year) in element[2]:
             yearList.append(element)
     month = str(monthToName[max(element[1] for element in yearList)])
@@ -102,9 +103,9 @@ def warmestMonthOfYear(year, file):
 
 
 # Fetches the coldest month of an entered year
-def coldestMonthOfYear(year, file):
+def coldestMonthOfYear(year, data):
     yearList = []
-    for element in file:
+    for element in data:
         if str(year) in element[2]:
             yearList.append(element)
     month = str(monthToName[min(element[1] for element in yearList)])
@@ -117,11 +118,11 @@ def listAvgTemp_perMonth_everyYear(file, yearMin, yearMax, lastMonth):
     for year in range(yearMin, yearMax + 1):
         if year == yearMax:
             for month in range(1, lastMonth + 1):  # HIER DUS
-                avgMonthTemp = average_temp_per_month(month, year, file)
+                avgMonthTemp = fahrenheit_to_celsius(average_temp_per_month(month, year, file))
                 list_year_month_avgtemp.append((year, {month: round(avgMonthTemp, 1)}))
         else:
             for month in range(1, 13):  # HIER DUS
-                avgMonthTemp = average_temp_per_month(month, year, file)
+                avgMonthTemp = fahrenheit_to_celsius(average_temp_per_month(month, year, file))
                 list_year_month_avgtemp.append((year, {month: round(avgMonthTemp, 1)}))
     print(list_year_month_avgtemp)
 
@@ -139,12 +140,12 @@ def main(filename):
         print("[Q] Quit the program")
         menuChoice = str(input("What would you like to do? "))
         if menuChoice == "1":
-            print(average_temperature_per_year(file))
+            print(average_temp_per_year(file))
         elif menuChoice == "2":
-            tempsF = average_temperature_per_year(file)
+            tempsF = average_temp_per_year(file)
             print(average_temperature_per_year_celsius(tempsF))
         elif menuChoice == "3":
-            annualTemps = average_temperature_per_year(file)
+            annualTemps = average_temp_per_year(file)
             warmest_coldest_year(annualTemps)
         elif menuChoice == "4":
             year = input("Enter a year: ")
