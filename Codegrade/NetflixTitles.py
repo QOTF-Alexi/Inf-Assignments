@@ -18,7 +18,7 @@ def get_headers(file_content):
 
 def get_directors(file_content):
     directors = []
-    for row in file_content:  # iteration makes it work, not sure why
+    for row in file_content:
         if row[3] != '' and row[3] != 'director':
             directors.append(row[3])
     return directors
@@ -46,7 +46,7 @@ def search_by_type(file_content, show_type):
 
 def search_by_director(file_content, director):
     recordings = []
-    for element in file_content:  # iteration makes it work, not sure why
+    for element in file_content:
         if director == element[3]:
             recordings.append(element[2])
     return recordings
@@ -62,11 +62,15 @@ def has_directed_both(data):
             if element[3] == director:
                 if element[1] == "TV Show":
                     directedShow = True
-                elif element[1] == "Movie":
+                    break
+        for element in data:
+            if element[3] == director:
+                if element[1] == "Movie":
                     directedMovie = True
+                    break
         if directedShow and directedMovie:
             directedBoth.append(director)
-    return directedBoth
+    return sorted(directedBoth)
 
 
 def print_all(data):
@@ -86,7 +90,7 @@ def main(filename):
     elif menuChoice == "2":
         print("There are", checkMovies(file), "Movies in the database.")
     elif menuChoice == "3":
-        print(*(has_directed_both(file)), sep=", ")
+        print(has_directed_both(file))
     elif menuChoice == "4":
         ()
     elif menuChoice == "5":
