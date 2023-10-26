@@ -75,7 +75,7 @@ def average_temp_per_year(data):
             year_temperatures[year].append(temperature)
     result = [(year, round(sum(temperatures) / len(temperatures), 2))
               for year, temperatures in year_temperatures.items()]
-    return result   
+    return result
 
 
 # Returns average annual temperature in Celsius

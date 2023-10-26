@@ -41,7 +41,11 @@ def checkMovies(data):
 
 
 def search_by_type(file_content, show_type):
-    ()
+    recordings = []
+    for element in file_content:
+        if show_type == element[1]:
+            recordings.append(element[2])
+    return recordings
 
 
 def search_by_director(file_content, director):
@@ -52,29 +56,31 @@ def search_by_director(file_content, director):
     return recordings
 
 
-def has_directed_both(data):
+def director_lead_num(data):
     directors = set(get_directors(data))
-    directedBoth = []
+    directors_count = []
     for director in directors:
-        directedShow = False
-        directedMovie = False
+        tvShows = 0
+        movies = 0
         for element in data:
             if element[3] == director:
                 if element[1] == "TV Show":
-                    directedShow = True
-                    break
+                    tvShows += 1
         for element in data:
             if element[3] == director:
                 if element[1] == "Movie":
-                    directedMovie = True
-                    break
-        if directedShow and directedMovie:
-            directedBoth.append(director)
-    return sorted(directedBoth)
+                    movies += 1
+        directors_count.append((director, movies, tvShows))
+    return sorted(directors_count)
 
 
-def print_all(data):
-    ()
+def has_directed_both(data):
+    directors_count = director_lead_num(data)
+    directed_both = []
+    for element in directors_count:
+        if element[1] > 0 and element[2] > 0:
+            directed_both.append(element[0])
+    return directed_both
 
 
 def main(filename):
@@ -92,9 +98,7 @@ def main(filename):
     elif menuChoice == "3":
         print(has_directed_both(file))
     elif menuChoice == "4":
-        ()
-    elif menuChoice == "5":
-        print(*(search_by_director(file, "Steven Spielberg")), sep=", ")
+        print(director_lead_num(file))
     else:
         print("That is not a valid entry!")
 
