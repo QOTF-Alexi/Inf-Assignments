@@ -3,6 +3,7 @@ import sys
 import csv
 
 
+# Provided code for loading the CSV file
 def load_csv_file(file_name):
     file_content = []
 
@@ -12,10 +13,12 @@ def load_csv_file(file_name):
     return file_content
 
 
+# Fetches the headers of the provided file
 def get_headers(file_content):
     return file_content[0]
 
 
+# Fetches all the (entered) directors inside the provided file
 def get_directors(file_content):
     directors = []
     for row in file_content:
@@ -24,6 +27,7 @@ def get_directors(file_content):
     return directors
 
 
+# Calculates the number of TV shows in the database
 def checkTVShows(data):
     tvShows = 0
     for element in data:
@@ -32,6 +36,7 @@ def checkTVShows(data):
     return tvShows
 
 
+# Calculates the number of Movies in the database
 def checkMovies(data):
     movies = 0
     for element in data:
@@ -40,6 +45,7 @@ def checkMovies(data):
     return movies
 
 
+# Function that returns every recording based on the type
 def search_by_type(file_content, show_type):
     recordings = []
     for element in file_content:
@@ -48,6 +54,7 @@ def search_by_type(file_content, show_type):
     return recordings
 
 
+# Function that returns every recording based on the director
 def search_by_director(file_content, director):
     recordings = []
     for element in file_content:
@@ -56,12 +63,14 @@ def search_by_director(file_content, director):
     return recordings
 
 
+# Calculates the number of TV shows and Movies a director has directed
 def director_lead_num(data):
     directors = set(get_directors(data))
     directors_count = []
     for director in directors:
         tvShows = 0
         movies = 0
+        # Iterate through the entire list, both types separately
         for element in data:
             if element[3] == director:
                 if element[1] == "TV Show":
@@ -74,6 +83,7 @@ def director_lead_num(data):
     return sorted(directors_count)
 
 
+# Checks if a director has directed both TV Shows and Movies
 def has_directed_both(data):
     directors_count = director_lead_num(data)
     directed_both = []
@@ -83,6 +93,7 @@ def has_directed_both(data):
     return directed_both
 
 
+# Main function to provide menu structure
 def main(filename):
     file = load_csv_file(filename)
     print("[1] Print the amount of TV Shows")
@@ -104,8 +115,8 @@ def main(filename):
 
 
 if __name__ == "__main__":
-    username = os.getenv("USERNAME")
-    if username == 'benno':
+    username = os.getenv("USERNAME")            # Fetches username of the OS
+    if username == 'benno':                     # Use different file for my username
         main("netflix_titles_ingekort.csv")
-    else:
+    else:                                       # Use default file for CodeGrade
         main("netflix_titles.csv")
