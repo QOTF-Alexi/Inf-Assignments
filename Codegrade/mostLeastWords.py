@@ -7,7 +7,7 @@ file = argv[-1]
 # Find most found word
 def maxWordAmount(inFile):
     maxAmount = 0
-    maxAmountList = {}
+    maxAmountList = []
     currentAmount = 0
     currentWord = ""
     with open(inFile) as data:
@@ -17,24 +17,24 @@ def maxWordAmount(inFile):
                 currentWord = (currentWord.lower()).strip(",.;:'\"?!&()")
                 for word in line.split():
                     word = (word.lower()).strip(",.;:'\"?!&()")
-                    if currentWord == word:
+                    if word == currentWord:
                         currentAmount += 1
                     else:
                         pass
-                if currentAmount > maxAmount:
-                    maxAmount = currentAmount
-                    maxAmountList = {currentWord}
-                elif currentAmount == maxAmount:
-                    maxAmountList += {currentWord}
-                else:
-                    pass
-    return maxAmountList
+        if currentAmount > maxAmount:
+            maxAmount = currentAmount
+            maxAmountList = [currentWord]
+        elif currentAmount == maxAmount:
+            maxAmountList.append(currentWord)
+        else:
+            pass
+    return set(maxAmountList)
 
 
 # Return words that appear least
 def minWordAmount(inFile):
     minAmount = float('inf')
-    minAmountList = {}
+    minAmountList = []
     currentAmount = 0
     currentWord = ""
     with open(inFile) as data:
@@ -43,18 +43,18 @@ def minWordAmount(inFile):
                 currentWord = (currentWord.lower()).strip(",.;:'\"?!&()")
                 for word in line.split():
                     word = (word.lower()).strip(",.;:'\"?!&()")
-                    if currentWord == word:
+                    if word == currentWord:
                         currentAmount += 1
                     else:
                         pass
-                if currentAmount < minAmount:
-                    minAmount = currentAmount
-                    minAmountList = {currentWord}
-                elif currentAmount == minAmount:
-                    minAmountList += {currentWord}
-                else:
-                    pass
-    return minAmountList
+        if currentAmount < minAmount:
+            minAmount = currentAmount
+            minAmountList = [currentWord]
+        elif currentAmount == minAmount:
+            minAmountList.append(currentWord)
+        else:
+            pass
+    return set(minAmountList)
 
 
 if __name__ == "__main__":
