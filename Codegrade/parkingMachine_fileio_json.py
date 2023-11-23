@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 
 
 class CarParkingMachine:
@@ -42,14 +43,35 @@ class ParkedCar:
 class CarParkingLogger:
     def __init__(self, id: str):
         self.id = id
+        self.jsonFile = "".join(("parking-machine-", str(self.id), ".json"))
+
+    def remove_entry_from_json_file(self, value):
+        with open(self.jsonFile, 'r') as file:
+            data = json.load(file)
+
+        for i in range(len(data)):
+            if data[i][self.license_plate] == value:
+                del data[i]
+                break
+
+        with open(self.jsonFile, 'w') as file:
+            json.dump(data, file)
 
     def check_in_logger(self, license_plate: str, check_in: datetime = datetime.now()):
         with open("carparklog.txt", "a") as data:
             data.write(f"{check_in};cpm_name={self.id};license_plate={license_plate};action=check-in\n")
+        json_dict = {
+            "license plate": str(license_plate),
+            "check_in": str(check_in)
+        }
+        json_object = json.dumps(json_dict, indent=4)
+        with open(self.jsonFile, "a") as jsonData:
+            jsonData.write(json_object)
 
     def check_out_logger(self, lic_plate: str, pfee: float, chk_out: datetime = datetime.now()):
         with open("carparklog.txt", "a") as data:
             data.write(f"{chk_out};cpm_name={self.id};license_plate={lic_plate};action=check-out;parking_fee={pfee}\n")
+        self.remove_entry_from_json_file(self.license_plate)
 
     def get_machine_fee_by_day(self, car_parking_machine_id: str, search_date: str):
         dayFee = 0
