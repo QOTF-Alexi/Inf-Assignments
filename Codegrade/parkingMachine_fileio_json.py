@@ -62,7 +62,7 @@ class CarParkingLogger:
         data = self.read_from_json()
         for element in data:
             if element["license_plate"] == value:       # KEY ERROR
-                del data[element]
+                del element
                 break
 
         with open(self.jsonFile, 'w') as file:
@@ -73,7 +73,7 @@ class CarParkingLogger:
             data.write(f"{check_in};cpm_name={self.id};license_plate={license_plate};action=check-in\n")
 
         json_dict = {
-            "license plate": str(license_plate),
+            "license_plate": str(license_plate),
             "check_in": str(check_in)
         }
 
