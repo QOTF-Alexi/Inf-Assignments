@@ -1,4 +1,6 @@
 from datetime import datetime
+import os
+import sys
 import json
 
 
@@ -45,13 +47,22 @@ class CarParkingLogger:
         self.id = id
         self.jsonFile = "".join(("parking-machine-", str(self.id), ".json"))
 
-    def remove_entry_from_json_file(self, value):
-        with open(self.jsonFile, 'r') as file:
-            data = json.load(file)
+    def read_from_json(self) -> list:
+        jsonData = list()
+        # read file
+        with open(os.path.join(sys.path[0], self.jsonFile)) as outfile:
+            json_data = json.load(outfile)
+            # iterate over each line in data and call the add function
+            for entry in json_data:
+                jsonData.append(entry)
 
-        for i in range(len(data)):
-            if data[i][self.license_plate] == value:
-                del data[i]
+        return jsonData
+
+    def remove_entry_from_json_file(self, value):
+        data = self.read_from_json()
+        for element in data:
+            if element["license_plate"] == value:       # KEY ERROR
+                del data[element]
                 break
 
         with open(self.jsonFile, 'w') as file:
@@ -60,18 +71,27 @@ class CarParkingLogger:
     def check_in_logger(self, license_plate: str, check_in: datetime = datetime.now()):
         with open("carparklog.txt", "a") as data:
             data.write(f"{check_in};cpm_name={self.id};license_plate={license_plate};action=check-in\n")
+
         json_dict = {
             "license plate": str(license_plate),
             "check_in": str(check_in)
         }
-        json_object = json.dumps(json_dict, indent=4)
-        with open(self.jsonFile, "a") as jsonData:
-            jsonData.write(json_object)
+
+        if os.path.isfile(self.jsonFile):
+            jsonData = self.read_from_json()
+            jsonData.append(json_dict)
+            json_object = json.dumps(jsonData, indent=4)
+            with open(self.jsonFile, "w") as jsonData:
+                jsonData.write(json_object)
+        else:
+            json_object = json.dumps(json_dict, indent=4)
+            with open(self.jsonFile, "w") as jsonData:
+                jsonData.write(f"[{json_object}]")
 
     def check_out_logger(self, lic_plate: str, pfee: float, chk_out: datetime = datetime.now()):
         with open("carparklog.txt", "a") as data:
             data.write(f"{chk_out};cpm_name={self.id};license_plate={lic_plate};action=check-out;parking_fee={pfee}\n")
-        self.remove_entry_from_json_file(self.license_plate)
+        self.remove_entry_from_json_file(lic_plate)
 
     def get_machine_fee_by_day(self, car_parking_machine_id: str, search_date: str):
         dayFee = 0
