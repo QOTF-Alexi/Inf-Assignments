@@ -13,6 +13,7 @@ class CarParkingMachine:
         self.log = CarParkingLogger(self.id)
 
     def check_in(self, license_plate: str, check_in: datetime = datetime.now()):
+        currently_parked = self.log.read_from_json()    # IMPLEMENT
         if len(self.parked_cars) < self.capacity:
             self.parked_cars[license_plate] = ParkedCar(license_plate, check_in)
             self.log.check_in_logger(license_plate, check_in)
@@ -61,7 +62,7 @@ class CarParkingLogger:
     def remove_entry_from_json_file(self, value):
         data = self.read_from_json()
         for element in data:
-            if element["license_plate"] == value:       # KEY ERROR
+            if element["license_plate"] == value:
                 del element
                 break
 
