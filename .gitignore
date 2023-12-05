@@ -1,10 +1,10 @@
 *.docx
 *.doc
 *.pdf
-students.csv
-contacts.json
-NLAMSTDM.txt
+*.csv
+*.json
+*.txt
 netflix_titles_ingekort.csv
 __pycache__/
 Challengeweek 2/
-pepega.txt
+Challengeweek 3/
