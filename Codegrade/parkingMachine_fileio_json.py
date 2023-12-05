@@ -8,16 +8,34 @@ class CarParkingMachine:
     def __init__(self, id: str, capacity: int = 10, hourly_rate: float = 2.50, parked_cars: dict = {}):
         self.capacity = capacity
         self.hourly_rate = hourly_rate
-        self.parked_cars = parked_cars
         self.id = id
         self.log = CarParkingLogger(self.id)
+        self.parked_cars = parked_cars
 
-    def check_in(self, license_plate: str, check_in: datetime = datetime.now()):
-        currently_parked = self.log.read_from_json()    # IMPLEMENT
-        if len(self.parked_cars) < self.capacity:
-            self.parked_cars[license_plate] = ParkedCar(license_plate, check_in)
-            self.log.check_in_logger(license_plate, check_in)
-            return "License registered"
+        self.jsonFile = "".join(("parking-machine-", str(self.id), ".json"))
+        if os.path.isfile(os.path.join(sys.path[0], self.jsonFile)):
+            jsonData = self.log.read_from_json()
+            dateFmt = '%Y-%m-%d %H:%M:%S'
+            for element in jsonData:
+                self.check_in(element["license_plate"], datetime.strptime(element["check_in"], dateFmt), True)
+        else:
+            pass
+
+    def check_in(self, lic_plate: str, check_in: datetime = datetime.now().replace(microsecond=0), rbt: bool = False):
+        alreadyRegistered = False
+        if lic_plate in self.parked_cars:
+            print("This license plate is already checked in!")
+            alreadyRegistered = True
+
+        if len(self.parked_cars) < self.capacity and not alreadyRegistered:
+            self.parked_cars[lic_plate] = ParkedCar(lic_plate, check_in)
+            if not rbt:
+                self.log.check_in_logger(lic_plate, check_in)
+                return "License registered"
+            else:
+                pass
+        elif alreadyRegistered:
+            return None
         else:
             return False
 
@@ -31,14 +49,14 @@ class CarParkingMachine:
             return f"License {license_plate} not found"
 
     def get_parking_fee(self, license_plate: str):
-        time_delta = datetime.now() - self.parked_cars[license_plate].check_in
+        time_delta = datetime.now().replace(microsecond=0) - self.parked_cars[license_plate].check_in
         delta_hours = int(-(-time_delta.total_seconds() / 3600 // 1))
         pfee = format(self.hourly_rate * delta_hours, '.2f')
-        return pfee
+        return float(pfee)
 
 
 class ParkedCar:
-    def __init__(self, license_plate: str, check_in: datetime = datetime.now()):
+    def __init__(self, license_plate: str, check_in: datetime = datetime.now().replace(microsecond=0)):
         self.license_plate = license_plate
         self.check_in = check_in
 
@@ -63,14 +81,14 @@ class CarParkingLogger:
         data = self.read_from_json()
         for element in data:
             if element["license_plate"] == value:
-                del element
+                data.remove(element)
                 break
 
-        with open(self.jsonFile, 'w') as file:
+        with open(os.path.join(sys.path[0], self.jsonFile), 'w') as file:
             json.dump(data, file)
 
-    def check_in_logger(self, license_plate: str, check_in: datetime = datetime.now()):
-        with open("carparklog.txt", "a") as data:
+    def check_in_logger(self, license_plate: str, check_in: datetime = datetime.now().replace(microsecond=0)):
+        with open(os.path.join(sys.path[0], "carparklog.txt"), "a") as data:
             data.write(f"{check_in};cpm_name={self.id};license_plate={license_plate};action=check-in\n")
 
         json_dict = {
@@ -78,25 +96,25 @@ class CarParkingLogger:
             "check_in": str(check_in)
         }
 
-        if os.path.isfile(self.jsonFile):
+        if os.path.isfile(os.path.join(sys.path[0], self.jsonFile)):
             jsonData = self.read_from_json()
             jsonData.append(json_dict)
             json_object = json.dumps(jsonData, indent=4)
-            with open(self.jsonFile, "w") as jsonData:
+            with open(os.path.join(sys.path[0], self.jsonFile), "w") as jsonData:
                 jsonData.write(json_object)
         else:
             json_object = json.dumps(json_dict, indent=4)
-            with open(self.jsonFile, "w") as jsonData:
+            with open(os.path.join(sys.path[0], self.jsonFile), "w") as jsonData:
                 jsonData.write(f"[{json_object}]")
 
-    def check_out_logger(self, lic_plate: str, pfee: float, chk_out: datetime = datetime.now()):
-        with open("carparklog.txt", "a") as data:
+    def check_out_logger(self, lic_plate: str, pfee: float, chk_out: datetime = datetime.now().replace(microsecond=0)):
+        with open(os.path.join(sys.path[0], "carparklog.txt"), "a") as data:
             data.write(f"{chk_out};cpm_name={self.id};license_plate={lic_plate};action=check-out;parking_fee={pfee}\n")
         self.remove_entry_from_json_file(lic_plate)
 
     def get_machine_fee_by_day(self, car_parking_machine_id: str, search_date: str):
         dayFee = 0
-        with open("carparklog.txt") as data:
+        with open(os.path.join(sys.path[0], "carparklog.txt"), "r") as data:
             for record in data:
                 recordList = record.split(sep=";")      # Separates all items in a record.
                 if recordList[0].startswith(search_date):
@@ -111,7 +129,7 @@ class CarParkingLogger:
 
     def get_total_car_fee(self, license_plate: str):
         carFee = 0
-        with open("carparklog.txt") as data:
+        with open(os.path.join(sys.path[0], "carparklog.txt"), "r") as data:
             for record in data:
                 recordList = record.split(sep=";")
                 compLicense = (recordList[2].split(sep="="))[1]
@@ -136,6 +154,8 @@ def main():
             checkinStat = pmachine.check_in(license)
             if checkinStat is False:
                 print("Capacity reached!")
+            elif checkinStat is None:
+                pass
             else:
                 print(checkinStat)
         elif option == "O":
