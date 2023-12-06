@@ -30,7 +30,7 @@ class CarParkingMachine:
         time_delta = datetime.now() - self.parked_cars[license_plate].check_in
         delta_hours = int(-(-time_delta.total_seconds() / 3600 // 1))
         pfee = format(self.hourly_rate * delta_hours, '.2f')
-        return pfee
+        return float(pfee)
 
 
 class ParkedCar:
