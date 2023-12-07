@@ -78,18 +78,18 @@ class CarParkingLogger:
         return jsonData
 
     def remove_entry_from_json_file(self, value):
-        data = self.read_from_json()
-        for element in data:
+        jsonContent = self.read_from_json()
+        for element in jsonContent:
             if element["license_plate"] == value:
-                data.remove(element)
+                jsonContent.remove(element)
                 break
 
         with open(os.path.join(sys.path[0], self.jsonFile), 'w') as file:
-            json.dump(data, file)
+            json.dump(jsonContent, file)
 
     def check_in_logger(self, license_plate: str, check_in: datetime = datetime.now().replace(microsecond=0)):
-        with open(os.path.join(sys.path[0], "carparklog.txt"), "a") as data:
-            data.write(f"{check_in};cpm_name={self.id};license_plate={license_plate};action=check-in\n")
+        with open(os.path.join(sys.path[0], "carparklog.txt"), "a") as txtContent:
+            txtContent.write(f"{check_in};cpm_name={self.id};license_plate={license_plate};action=check-in\n")
 
         json_dict = {
             "license_plate": str(license_plate),
@@ -108,14 +108,15 @@ class CarParkingLogger:
                 jsonData.write(f"[{json_object}]")
 
     def check_out_logger(self, lic_plate: str, pfee: float, chk_out: datetime = datetime.now().replace(microsecond=0)):
-        with open(os.path.join(sys.path[0], "carparklog.txt"), "a") as data:
-            data.write(f"{chk_out};cpm_name={self.id};license_plate={lic_plate};action=check-out;parking_fee={pfee}\n")
+        with open(os.path.join(sys.path[0], "carparklog.txt"), "a") as txtContent:
+            txtContent.write(f"{chk_out};cpm_name={self.id};\
+license_plate={lic_plate};action=check-out;parking_fee={pfee}\n")
         self.remove_entry_from_json_file(lic_plate)
 
     def get_machine_fee_by_day(self, car_parking_machine_id: str, search_date: str):
         dayFee = 0
-        with open(os.path.join(sys.path[0], "carparklog.txt"), "r") as data:
-            for record in data:
+        with open(os.path.join(sys.path[0], "carparklog.txt"), "r") as txtContent:
+            for record in txtContent:
                 recordList = record.split(sep=";")      # Separates all items in a record.
                 if recordList[0].startswith(search_date):
                     if recordList[1].endswith(car_parking_machine_id):
@@ -129,8 +130,8 @@ class CarParkingLogger:
 
     def get_total_car_fee(self, license_plate: str):
         carFee = 0
-        with open(os.path.join(sys.path[0], "carparklog.txt"), "r") as data:
-            for record in data:
+        with open(os.path.join(sys.path[0], "carparklog.txt"), "r") as txtContent:
+            for record in txtContent:
                 recordList = record.split(sep=";")
                 compLicense = (recordList[2].split(sep="="))[1]
                 if compLicense == license_plate and recordList[1].endswith(self.id):
