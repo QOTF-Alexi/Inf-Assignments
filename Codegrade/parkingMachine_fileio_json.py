@@ -12,7 +12,7 @@ class CarParkingMachine:
         self.log = CarParkingLogger(self.id)
         self.parked_cars = parked_cars
 
-        self.jsonFile = "".join(("parking-machine-", str(self.id), ".json"))
+        self.jsonFile = "".join((str(self.id), "_state.json"))
         if os.path.isfile(os.path.join(sys.path[0], self.jsonFile)):
             jsonData = self.log.read_from_json()
             dateFmt = '%Y-%m-%d %H:%M:%S'
@@ -64,7 +64,7 @@ class ParkedCar:
 class CarParkingLogger:
     def __init__(self, id: str):
         self.id = id
-        self.jsonFile = "".join(("parking-machine-", str(self.id), ".json"))
+        self.jsonFile = "".join((str(self.id), "_state.json"))
 
     def read_from_json(self) -> list:
         jsonData = list()
