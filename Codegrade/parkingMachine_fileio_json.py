@@ -2,6 +2,7 @@ from datetime import datetime
 import os
 import sys
 import json
+import sqlite3
 
 
 class CarParkingMachine:
@@ -20,6 +21,18 @@ class CarParkingMachine:
                 self.check_in(element["license_plate"], datetime.strptime(element["check_in"], dateFmt), True)
         else:
             pass
+
+        self.db_conn = sqlite3.connect(os.path.join(sys.path[0], 'carparkingmachine.db'))
+        self.db_conn.execute(
+            '''CREATE TABLE IF NOT EXISTS parkings (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                car_parking_machine TEXT NOT NULL,
+                license_plate TEXT NOT NULL,
+                check_in TEXT NOT NULL,
+                check_out TEXT DEFAULT NULL,
+                parking_fee NUMERIC DEFAULT 0
+            );'''
+        )
 
     def check_in(self, lic_plate: str, check_in: datetime = datetime.now().replace(microsecond=0), rbt: bool = False):
         alreadyRegistered = False
@@ -53,6 +66,18 @@ class CarParkingMachine:
         delta_hours = int(-(-time_delta.total_seconds() / 3600 // 1))
         pfee = format(self.hourly_rate * delta_hours, '.2f')
         return float(pfee)
+
+    """def find_by_id(self, id) -> ParkedCar:
+        return ParkedCar
+
+    def find_last_checkin(self, license_plate) -> int:
+        return int()
+
+    def insert(self, parked_car: ParkedCar) -> ParkedCar:
+        return ParkedCar
+
+    def update(self, parked_car: ParkedCar) -> None:
+        pass"""
 
 
 class ParkedCar:
