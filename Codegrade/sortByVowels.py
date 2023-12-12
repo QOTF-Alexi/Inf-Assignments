@@ -8,8 +8,8 @@ def get_num_of_vowels(inp: str) -> int:
 
 
 def sort_basedon_vowels():
-  cases = ['code','programming','description','fly','free']
-  print(sorted(cases, key=lambda word: sum(ch in 'aeiou' for ch in word), reverse=True))
+  cases = ['code', 'programming', 'description', 'fly', 'free']
+  print(sorted(cases, key=lambda word: sum(ch in 'aeiou' for ch in word)))
 
 
 if __name__ == "__main__":
