@@ -1,4 +1,4 @@
-def encode_string(data: str, key: str = None) -> str:
+def encode_string(data: str, key: str = "") -> str:
     keydict = set_dict_key(key)
     encodedStr = str()
     for char in data:
@@ -6,7 +6,7 @@ def encode_string(data: str, key: str = None) -> str:
     return encodedStr
 
 
-def decode_string(data: str, key: str = None) -> str:
+def decode_string(data: str, key: str = "") -> str:
     keydict = set_dict_key(key)
     inverse_keydict = {value: key for key, value in keydict.items()}
     decodedStr = str()
@@ -15,7 +15,7 @@ def decode_string(data: str, key: str = None) -> str:
     return decodedStr
 
 
-def encode_list(data: list, key: str = None) -> list:
+def encode_list(data: list, key: str = "") -> list:
     encodedList = []
     for element in data:
         encodedElement = encode_string(element, key)
@@ -23,7 +23,7 @@ def encode_list(data: list, key: str = None) -> list:
     return encodedList
 
 
-def decode_list(data: list, key: str = None) -> list:
+def decode_list(data: list, key: str = "") -> list:
     decodedList = []
     for element in data:
         decodedElement = decode_string(element, key)
@@ -31,7 +31,7 @@ def decode_list(data: list, key: str = None) -> list:
     return decodedList
 
 
-def validate_values(encoded: str, decoded: str, key: str = None) -> bool:
+def validate_values(encoded: str, decoded: str, key: str = "") -> bool:
     if ', ' in encoded:
         decodeStr = decode_list(encoded.split(sep=", "), key)
     else:
@@ -48,7 +48,7 @@ def validate_values(encoded: str, decoded: str, key: str = None) -> bool:
         return False
 
 
-def set_dict_key(key: str) -> None:
+def set_dict_key(key: str):
     dict_key = {}
     if (len(key)/2) % 2 == 0:
         for char in range((len(key) // 2)):
@@ -56,7 +56,7 @@ def set_dict_key(key: str) -> None:
         return dict_key
     else:
         print("Invalid hashvalue input")
-        return False
+        return None
 
 
 def main():
