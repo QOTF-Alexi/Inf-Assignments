@@ -8,15 +8,15 @@ def lines(length):
 
 
 def display(addressbook: list):
-    for element in range(len(addressbook)):
+    for element in addressbook:
         lines(38)
-        print("Position:", (addressbook[element])["id"])
-        print("First name:", (addressbook[element])["first_name"])
-        print("Last name:", (addressbook[element])["last_name"])
+        print("Position:", element["id"])
+        print("First name:", element["first_name"])
+        print("Last name:", element["last_name"])
         print("Emails: ", end="")
-        print(*(addressbook[element])["emails"], sep=", ")
+        print(*element["emails"], sep=", ")
         print("Phone numbers: ", end="")
-        print(*(addressbook[element])["phone_numbers"], sep=", ")
+        print(*element["phone_numbers"], sep=", ")
     lines(38)
 
 
@@ -68,31 +68,31 @@ def add_contact(addressbook):
 def askToRemove():
     try:
         ident = int(input("Enter the ID number: "))
+        return ident
     except ValueError:
         print("That is not a valid entry!")
-    return ident
 
 
 def remove_contact(addressbook, ident):
-    for element in range(len(addressbook)):
-        if (addressbook[element])["id"] == ident:
-            del addressbook[element]
+    for element in addressbook:
+        if element["id"] == ident:
+            addressbook.remove(element)
             break
     print("Contact removed successfully.")
 
 
 def merge_contacts(addressbook):
-    for element in range(len(addressbook)):
-        fullname = (addressbook[element])["first_name"], (addressbook[element])["last_name"]
-        ident = (addressbook[element])["id"]
-        for compareElement in range(len(addressbook)):
-            fullnameComp = (addressbook[compareElement])["first_name"], (addressbook[compareElement])["last_name"]
-            identComp = (addressbook[compareElement])["id"]
+    for element in addressbook:
+        fullname = element["first_name"], element["last_name"]
+        ident = element["id"]
+        for compareElement in addressbook:
+            fullnameComp = compareElement["first_name"], compareElement["last_name"]
+            identComp = compareElement["id"]
             if fullname == fullnameComp and ident != identComp:
-                merge_emails = (addressbook[compareElement])["emails"]
-                merge_phones = (addressbook[compareElement])["phone_numbers"]
-                ((addressbook[element])["emails"]) += merge_emails
-                ((addressbook[element])["phone_numbers"]) += merge_phones
+                merge_emails = compareElement["emails"]
+                merge_phones = compareElement["phone_numbers"]
+                (element["emails"]) += merge_emails
+                (element["phone_numbers"]) += merge_phones
                 remove_contact(addressbook, identComp)
                 return None
 
