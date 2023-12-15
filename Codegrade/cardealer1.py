@@ -7,17 +7,17 @@ class Car:
         self.sold = False
         self.sold_to = ""
 
-    def sell(__init__, sold_to):
-        __init__.sold = True
-        __init__.sold_to = sold_to
+    def sell(self, sold_to):
+        self.sold = True
+        self.sold_to = sold_to
 
-    def print(__init__):
-        print("Brand:", __init__.brand)
-        print("Model:", __init__.model)
-        print("Color:", __init__.color)
-        print("Price:", __init__.price)
-        if __init__.sold:
-            print("Sold to", __init__.sold_to)
+    def print(self):
+        print("Brand:", self.brand)
+        print("Model:", self.model)
+        print("Color:", self.color)
+        print("Price:", self.price)
+        if self.sold:
+            print("Sold to", self.sold_to)
         else:
             print("Not sold yet")
 
@@ -31,17 +31,17 @@ class Motorcycle:
         self.sold = False
         self.sold_to = ""
 
-    def sell(__init__, sold_to):
-        __init__.sold = True
-        __init__.sold_to = sold_to
+    def sell(self, sold_to):
+        self.sold = True
+        self.sold_to = sold_to
 
-    def print(__init__):
-        print("Brand:", __init__.brand)
-        print("Model:", __init__.model)
-        print("Color:", __init__.color)
-        print("Price:", __init__.price)
-        if __init__.sold:
-            print("Sold to", __init__.sold_to)
+    def print(self):
+        print("Brand:", self.brand)
+        print("Model:", self.model)
+        print("Color:", self.color)
+        print("Price:", self.price)
+        if self.sold:
+            print("Sold to", self.sold_to)
         else:
             print("Not sold yet")
 
@@ -50,11 +50,11 @@ class Customer:
     def __init__(self, name: str):
         self.name = name
 
-    def print(__init__):
-        print("Name:", __init__.name)
+    def print(self):
+        print("Name:", self.name)
 
-    def __repr__(__init__):
-        return __init__.name
+    def __repr__(self):
+        return self.name
 
 
 if __name__ == "__main__":

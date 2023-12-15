@@ -23,7 +23,7 @@ class Converter:
             self.convertLen = self.length * 0.001
         else:
             print("Impossible conversion!")
-            self.convertLen = None
+            self.convertLen = 0
         return self.convertLen
 
     def inches(self):
