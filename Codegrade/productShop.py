@@ -4,13 +4,13 @@ class Product:
         self.amount = amount
         self.price = price
 
-    def get_price(__init__, amount):
+    def get_price(self, amount):
         if 10 <= amount <= 99:
-            return (__init__.price * amount * 0.9)
+            return (self.price * amount * 0.9)
         elif amount >= 100:
-            return (__init__.price * amount * 0.8)
+            return (self.price * amount * 0.8)
         else:
-            return (__init__.price * amount)
+            return (self.price * amount)
 
-    def make_purchase(__init__, amount):
-        __init__.amount -= amount
+    def make_purchase(self, amount):
+        self.amount -= amount
