@@ -82,19 +82,22 @@ def remove_contact(addressbook, ident):
 
 
 def merge_contacts(addressbook):
+    # Selecteer een contact
     for element in addressbook:
-        fullname = element["first_name"], element["last_name"]
-        ident = element["id"]
+        fullname = element["first_name"], element["last_name"]      # Samenvoegen naam.
+        ident = element["id"]                                       # Sla ID op in variabele.
+        # Itereer door de gehele lijst en zoek kopieën van het geselecteerde contact.
         for compareElement in addressbook:
             fullnameComp = compareElement["first_name"], compareElement["last_name"]
             identComp = compareElement["id"]
+            # Voeg samen wanneer naam gelijk is en ID nummer dat niet is.
             if fullname == fullnameComp and ident != identComp:
-                merge_emails = compareElement["emails"]
-                merge_phones = compareElement["phone_numbers"]
-                (element["emails"]) += merge_emails
-                (element["phone_numbers"]) += merge_phones
-                remove_contact(addressbook, identComp)
-                return None
+                merge_emails = compareElement["emails"]             # Lees e-mail adressen uit het duplicaat.
+                merge_phones = compareElement["phone_numbers"]      # Lees telefoonnummers uit het duplicaat.
+                (element["emails"]) += merge_emails                 # Voeg e-mail adressen samen.
+                (element["phone_numbers"]) += merge_phones          # Voeg telefoonnummers samen.
+                remove_contact(addressbook, identComp)              # Verwijder het tweede (dubbbele contact.
+    return None
 
 
 def read_from_json(filename) -> list:
